@@ -27,23 +27,25 @@
                               </tr>  
                             </thead>
 
-                        @if($model)                               
-                            <tbody>                            
-                            @foreach($model as $item)
-                               
-                                    <tr>
-                                        <td> {{$item->email}}</td>
-                                        <td> {{$item->password}}</td>
-                                    </tr>  
-                            @endforeach     
+                        @if(count($model))    
+                        
+                            <tbody>                               
+                                        <tr>
+                                            @foreach($model as $item)
+                                                <td> {{$item->email}}</td>
+                                                <td> {{$item->password}}</td>
+                                            @endforeach
+                                        </tr>  
                             </tbody>
-                        @else    
+
+                        @else
+
                             <tbody>
                                 <tr>
                                     <td colspan='2'>No data found!</td>
                                 </tr>
                             </tbody> 
-                        @endif       
+                        @endif
                         </table>    
                         
                   
@@ -66,9 +68,7 @@
                 var token = $('meta[name="csrf-token"]').attr('content');
                 var email = $('#email').val();
                 var password = $('#password').val();
-                
-                console.log(email + ',' + password);
-                
+                              
                   $.ajax({
                     url:'/insert_bossing',
                     type: 'POST',   
@@ -76,8 +76,11 @@
                     success: function(res){
                         alert(res.message);
                     },
-                    error: function(res){
-                        alert(res.message);
+                    error: function(err){
+                        if(err.readyState === 4){   
+                            alert(JSON.parse(err.responseText)?.email || JSON.parse(err.responseText)?.password );
+                        }
+                        
                     },
                 })	
             })
